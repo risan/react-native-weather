@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Main from './components/Main';
+import CurrentWeatherContainer from './components/CurrentWeatherContainer';
 
 export default class App extends Component {
   render() {
-    return <Main />;
+    return <CurrentWeatherContainer />;
   }
 }
