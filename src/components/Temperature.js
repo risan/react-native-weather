@@ -2,10 +2,10 @@ import React from 'react';
 import { Text } from 'react-native';
 import TemperatureUnit from '../utils/TemperatureUnit';
 
-const Temperature = ({ temperature, unit = TemperatureUnit.CELCIUS, fontSize = 16 }) => {
+const Temperature = ({ temperature, unit = TemperatureUnit.CELCIUS, fontSize = 16, decimalPlaces = 0 }) => {
   return (
     <Text style={{ fontSize: fontSize }}>
-      {temperature}{TemperatureUnit.getSymbolForUnit(unit)}
+      {temperature.toFixed(decimalPlaces)}{TemperatureUnit.getSymbolForUnit(unit)}
     </Text>
   );
 }

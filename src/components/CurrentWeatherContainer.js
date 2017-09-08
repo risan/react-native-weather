@@ -14,10 +14,7 @@ export default class CurrentWeatherContainer extends Component {
       city: 'Stockholm'
     };
 
-    this.weatherApiClient = new WeatherApiClient({
-      apiKey: env.OPEN_WEATHER_API_KEY,
-      unit: this.state.unit
-    });
+    this.weatherApiClient = new WeatherApiClient({ apiKey: env.OPEN_WEATHER_API_KEY });
   }
 
   componentDidMount() {
@@ -26,10 +23,15 @@ export default class CurrentWeatherContainer extends Component {
 
   async fetchData() {
     try {
-      ({ main: { temp: temperature } } = await this.weatherApiClient.get(this.state.city));
+      let responseJson = await this.weatherApiClient.getCurrent({
+        city: this.state.city,
+        unit: this.state.unit
+      });
+
+      console.log(responseJson);
 
       this.setState(previousState => {
-        return { temperature: temperature };
+        return { temperature: responseJson.main.temp };
       });
     } catch (error) {
       console.log(error);
