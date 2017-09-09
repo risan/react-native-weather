@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import CurrentWeather from './CurrentWeather';
 import TemperatureUnit from '../utils/TemperatureUnit';
 import Weather from '../services/Weather';
@@ -11,7 +12,9 @@ export default class CurrentWeatherContainer extends Component {
     this.state = {
       temperature: 0,
       unit: TemperatureUnit.CELCIUS,
-      city: 'Stockholm'
+      weatherCondition: null,
+      city: 'Stockholm',
+      lastUpdatedAt: null
     };
 
     this.weather = new Weather({ apiKey: env.OPEN_WEATHER_API_KEY });
@@ -31,7 +34,12 @@ export default class CurrentWeatherContainer extends Component {
       console.log(data);
 
       this.setState(previousState => {
-        return { temperature: data.weather.temperature };
+        return {
+          temperature: data.weather.temperature,
+          weatherCondition: data.weather.condition.name,
+          city: data.location.city,
+          lastUpdatedAt: moment.unix(data.request_data.timestamp).fromNow()
+        };
       });
     } catch (error) {
       console.log(error);
@@ -42,8 +50,10 @@ export default class CurrentWeatherContainer extends Component {
     return (
       <CurrentWeather
         temperature={this.state.temperature}
+        weatherCondition={this.state.weatherCondition}
         unit={this.state.unit}
         city={this.state.city}
+        lastUpdatedAt={this.state.lastUpdatedAt}
       />
     );
   }

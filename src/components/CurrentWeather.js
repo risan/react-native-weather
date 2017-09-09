@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import Temperature from './Temperature';
 import Location from './Location';
 
@@ -8,7 +8,9 @@ export default class CurrentWeather extends Component {
     return (
       <View style={styles.container}>
         <Temperature temperature={this.props.temperature} unit={this.props.unit} style={styles.temperature} />
+        <Text>{this.props.weatherCondition}</Text>
         <Location name={this.props.city} style={styles.location} />
+        <Text>Updated {this.props.lastUpdatedAt}</Text>
       </View>
     );
   }
