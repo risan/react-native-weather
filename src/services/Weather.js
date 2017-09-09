@@ -17,35 +17,42 @@ export default class Weather {
     try {
       let data = await this.storage.get('currentWeather');
 
-      if (this.shouldUseDataFromStorage(data, force)) {
+      if (this.shouldUseDataFromStorage(data, city, countryCode, force)) {
         console.log('🌈 FROM STORAGE');
         return this.convertMeasurementUnit(data, unit);
       }
 
       data = await this.weatherApiClient.getCurrent({ city, countryCode });
-      data = this.transformApiData(data);
+      data = this.transformApiData(data, city, countryCode);
       await this.storage.set('currentWeather', data);
 
       console.log('🔥 FROM API');
-
       return this.convertMeasurementUnit(data, unit);
     } catch (error) {
       throw error;
     }
   }
 
-  shouldUseDataFromStorage(data, force = false) {
-    if (data === null || force) {
+  shouldUseDataFromStorage(data, city, countryCode, force) {
+    if (data === null || this.hasDifferentRequestData(data, city, countryCode) || force) {
       return false;
     }
 
-    return (moment().unix() - data.timestamp) < this.minNextUpdateMinutes * 60;
+    return (moment().unix() - data.request_data.timestamp) < this.minNextUpdateMinutes * 60;
   }
 
-  transformApiData(data) {
+  hasDifferentRequestData(data, city, countryCode) {
+    return data.request_data.city !== city || data.request_data.countryCode !== countryCode;
+  }
+
+  transformApiData(data, city, countryCode, timestamp = moment().unix()) {
     return {
       id: data.id,
-      timestamp: moment().unix(),
+      request_data: {
+        city: city,
+        countryCode: countryCode,
+        timestamp: timestamp
+      },
       location: {
         city: data.name,
         country_code: data.sys.country,

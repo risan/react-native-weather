@@ -11,7 +11,7 @@ export default class CurrentWeatherContainer extends Component {
     this.state = {
       temperature: 0,
       unit: TemperatureUnit.CELCIUS,
-      city: 'Jakarta'
+      city: 'Stockholm'
     };
 
     this.weather = new Weather({ apiKey: env.OPEN_WEATHER_API_KEY });
@@ -30,14 +30,9 @@ export default class CurrentWeatherContainer extends Component {
 
       console.log(data);
 
-      // await this.storage.set('currentWeather', data);
-
-      // console.log('FROM API');
-      // console.log(data);
-
-      // this.setState(previousState => {
-      //   return { temperature: data.main.temp };
-      // });
+      this.setState(previousState => {
+        return { temperature: data.weather.temperature };
+      });
     } catch (error) {
       console.log(error);
     }
@@ -48,6 +43,7 @@ export default class CurrentWeatherContainer extends Component {
       <CurrentWeather
         temperature={this.state.temperature}
         unit={this.state.unit}
+        city={this.state.city}
       />
     );
   }
