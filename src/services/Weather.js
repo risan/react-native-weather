@@ -4,12 +4,12 @@ import Storage from '../utils/Storage';
 import TemperatureUnit from '../utils/TemperatureUnit';
 
 export default class Weather {
-  constructor({ defaultUnit = TemperatureUnit.CELCIUS, apiKey = null, minNextUpdateMinutes = 10 } = {}) {
+  constructor({ defaultUnit = TemperatureUnit.CELCIUS, apiKey = null, storageKey = 'Weather', minNextUpdateMinutes = 10 } = {}) {
     this.defaultUnit = defaultUnit;
     this.apiKey = apiKey;
     this.minNextUpdateMinutes = minNextUpdateMinutes;
 
-    this.storage = new Storage('WeatherApp');
+    this.storage = new Storage(storageKey);
     this.weatherApiClient = new WeatherApiClient({ apiKey: this.apiKey, defaultUnits: WeatherApiClient.UNITS_METRIC });
   }
 
@@ -19,7 +19,7 @@ export default class Weather {
 
       if (this.shouldUseDataFromStorage(data, force)) {
         console.log('🌈 FROM STORAGE');
-        return data;
+        return this.convertMeasurementUnit(data, unit);
       }
 
       data = await this.weatherApiClient.getCurrent({ city, countryCode });
@@ -28,7 +28,7 @@ export default class Weather {
 
       console.log('🔥 FROM API');
 
-      return data;
+      return this.convertMeasurementUnit(data, unit);
     } catch (error) {
       throw error;
     }
@@ -80,4 +80,27 @@ export default class Weather {
       }
     };
   }
+
+  convertMeasurementUnit(data, unit) {
+    switch (unit) {
+      case TemperatureUnit.CELCIUS:
+        return data;
+      case TemperatureUnit.FAHRENHEIT:
+        return Object.assign({}, data, this.convertTemperatureUnit(data, 'convertCelciusToFahrenheit'));
+      case TemperatureUnit.KELVIN:
+        return Object.assign({}, data, this.convertTemperatureUnit(data, 'convertCelciusToKelvin'));
+    }
+  }
+
+  convertTemperatureUnit({ weather }, converterMethod) {
+    let replacements = {
+      temperature: TemperatureUnit[converterMethod](weather.temperature),
+      temperature_range: {
+        min: TemperatureUnit[converterMethod](weather.temperature_range.min),
+        max: TemperatureUnit[converterMethod](weather.temperature_range.max)
+      }
+    };
+
+    return { weather: Object.assign({}, weather, replacements) };
+  };
 }

@@ -21,4 +21,12 @@ export default class TemperatureUnit {
         return 'K';
     }
   }
+
+  static convertCelciusToFahrenheit(value) {
+    return (1.8 * value) + 32;
+  }
+
+  static convertCelciusToKelvin(value) {
+    return value + 273.15;
+  }
 }
