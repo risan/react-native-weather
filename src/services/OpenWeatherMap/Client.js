@@ -1,3 +1,4 @@
+import moment from 'moment';
 import queryString from 'query-string';
 
 export default class Client {
@@ -45,6 +46,8 @@ export default class Client {
       if (response.status !== 200) {
         throw new Error(responseJson.message);
       }
+
+      responseJson.timestamp = moment().unix();
 
       return responseJson;
     } catch (error) {

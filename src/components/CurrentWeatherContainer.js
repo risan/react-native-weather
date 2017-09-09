@@ -31,14 +31,14 @@ export default class CurrentWeatherContainer extends Component {
         unit: this.state.unit
       });
 
-      console.log(data);
+      //console.log(data);
 
       this.setState(previousState => {
         return {
           temperature: data.weather.temperature,
           weatherCondition: data.weather.condition.name,
           city: data.location.city,
-          lastUpdatedAt: moment.unix(data.request_data.timestamp).fromNow()
+          lastUpdatedAt: moment.unix(data.timestamp).fromNow()
         };
       });
     } catch (error) {
