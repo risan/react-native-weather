@@ -1,7 +1,9 @@
 import moment from 'moment';
-import WeatherApiClient from './WeatherApiClient';
-import Storage from '../utils/Storage';
-import TemperatureUnit from '../utils/TemperatureUnit';
+import { Client } from '../OpenWeatherMap';
+import Storage from '../../utils/Storage';
+import TemperatureUnit from '../../utils/TemperatureUnit';
+import WeatherConditionText from './WeatherConditionText';
+import WeatherConditionEmoji from './WeatherConditionEmoji';
 
 export default class Weather {
   constructor({ defaultUnit = TemperatureUnit.CELCIUS, apiKey = null, storageKey = 'Weather', minNextUpdateMinutes = 10 } = {}) {
@@ -10,7 +12,7 @@ export default class Weather {
     this.minNextUpdateMinutes = minNextUpdateMinutes;
 
     this.storage = new Storage(storageKey);
-    this.weatherApiClient = new WeatherApiClient({ apiKey: this.apiKey, defaultUnits: WeatherApiClient.UNITS_METRIC });
+    this.client = new Client({ apiKey: this.apiKey, defaultUnits: Client.UNITS_METRIC });
   }
 
   async getCurrent({ city, countryCode = null, unit = this.defaultUnit, force = false}) {
@@ -22,7 +24,7 @@ export default class Weather {
         return this.convertMeasurementUnit(data, unit);
       }
 
-      data = await this.weatherApiClient.getCurrent({ city, countryCode });
+      data = await this.client.getCurrent({ city, countryCode });
       data = this.transformApiData(data, city, countryCode);
       await this.storage.set('currentWeather', data);
 
@@ -65,7 +67,8 @@ export default class Weather {
         calculated_at: data.dt,
         condition: {
           id: data.weather[0].id,
-          name: data.weather[0].description,
+          name: WeatherConditionText.getForCode(data.weather[0].id),
+          emoji: WeatherConditionEmoji.getForCode(data.weather[0].id),
           group: data.weather[0].main
         },
         temperature: data.main.temp,

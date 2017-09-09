@@ -13,7 +13,7 @@ export default class CurrentWeatherContainer extends Component {
       temperature: 0,
       unit: TemperatureUnit.CELCIUS,
       weatherCondition: null,
-      city: 'Stockholm',
+      city: 'Jakarta',
       lastUpdatedAt: null
     };
 

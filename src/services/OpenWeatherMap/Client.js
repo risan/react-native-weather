@@ -1,6 +1,6 @@
 import queryString from 'query-string';
 
-export default class WeatherApiClient {
+export default class Client {
   static get UNITS_DEFAULT() {
     return null;
   }
@@ -13,15 +13,15 @@ export default class WeatherApiClient {
     return 'imperial';
   }
 
-  constructor({ baseUrl = WeatherApiClient.BASE_URL, version = '2.5', defaultUnits = WeatherApiClient.UNITS_METRIC, apiKey = null } = {}) {
+  static get BASE_URL() {
+    return 'https://api.openweathermap.org/data';
+  }
+
+  constructor({ baseUrl = Client.BASE_URL, version = '2.5', defaultUnits = Client.UNITS_METRIC, apiKey = null } = {}) {
     this.baseUrl = baseUrl;
     this.version = version;
     this.defaultUnits = defaultUnits;
     this.apiKey = apiKey;
-  }
-
-  static get BASE_URL() {
-    return 'https://api.openweathermap.org/data';
   }
 
   async getCurrent({ city, countryCode = null, units = this.defaultUnits}) {
