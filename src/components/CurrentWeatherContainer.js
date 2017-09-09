@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import CurrentWeather from './CurrentWeather';
 import TemperatureUnit from '../utils/TemperatureUnit';
-import Storage from '../utils/Storage';
-import WeatherApiClient from '../services/WeatherApiClient';
+import Weather from '../services/Weather';
 import env from '../../env';
 
 export default class CurrentWeatherContainer extends Component {
@@ -12,11 +11,10 @@ export default class CurrentWeatherContainer extends Component {
     this.state = {
       temperature: 0,
       unit: TemperatureUnit.CELCIUS,
-      city: 'Stockholm'
+      city: 'Jakarta'
     };
 
-    this.storage = new Storage('WeatherApp');
-    this.weatherApiClient = new WeatherApiClient({ apiKey: env.OPEN_WEATHER_API_KEY });
+    this.weather = new Weather({ apiKey: env.OPEN_WEATHER_API_KEY });
   }
 
   componentDidMount() {
@@ -25,32 +23,21 @@ export default class CurrentWeatherContainer extends Component {
 
   async fetchData() {
     try {
-      let data = await this.storage.get('currentWeather');
-
-      if (data !== null) {
-        console.log('FROM STORAGE');
-        console.log(data);
-
-        this.setState(previousState => {
-          return { temperature: data.main.temp };
-        });
-
-        return data;
-      }
-
-      data = await this.weatherApiClient.getCurrent({
+      let data = await this.weather.getCurrent({
         city: this.state.city,
         unit: this.state.unit
       });
 
-      await this.storage.set('currentWeather', data);
-
-      console.log('FROM API');
       console.log(data);
 
-      this.setState(previousState => {
-        return { temperature: data.main.temp };
-      });
+      // await this.storage.set('currentWeather', data);
+
+      // console.log('FROM API');
+      // console.log(data);
+
+      // this.setState(previousState => {
+      //   return { temperature: data.main.temp };
+      // });
     } catch (error) {
       console.log(error);
     }

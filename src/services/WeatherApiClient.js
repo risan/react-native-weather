@@ -1,11 +1,22 @@
 import queryString from 'query-string';
-import TemperatureUnit from '../utils/TemperatureUnit';
 
 export default class WeatherApiClient {
-  constructor({ baseUrl = WeatherApiClient.BASE_URL, version = '2.5', defaultUnit = TemperatureUnit.CELCIUS, apiKey = null } = {}) {
+  static get UNITS_DEFAULT() {
+    return null;
+  }
+
+  static get UNITS_METRIC() {
+    return 'metric';
+  }
+
+  static get UNIT_IMPERIAL() {
+    return 'imperial';
+  }
+
+  constructor({ baseUrl = WeatherApiClient.BASE_URL, version = '2.5', defaultUnits = WeatherApiClient.UNITS_METRIC, apiKey = null } = {}) {
     this.baseUrl = baseUrl;
     this.version = version;
-    this.defaultUnit = defaultUnit;
+    this.defaultUnits = defaultUnits;
     this.apiKey = apiKey;
   }
 
@@ -13,10 +24,10 @@ export default class WeatherApiClient {
     return 'https://api.openweathermap.org/data';
   }
 
-  async getCurrent({ city, countryCode = null, unit = this.defaultUnit}) {
+  async getCurrent({ city, countryCode = null, units = this.defaultUnits}) {
     let params = {
       q: countryCode === null ? city : `${city},${countryCode}`,
-      unit: unit
+      units: units
     };
 
     try {
@@ -46,33 +57,14 @@ export default class WeatherApiClient {
   }
 
   buildQueryParams(params = {}) {
-    // Convert our custom `unit` param to OpenWeatherMap `units` param.
-    if (params.hasOwnProperty('unit')) {
-      if (params.unit !== TemperatureUnit.FAHRENHEIT) {
-        params.units = this.convertToUnitsParam(params.unit);
-        delete params.unit;
-      }
-    }
-
-    // Convert our custom `apiKey` param to OpenWeatherMap `APPID` param.
-    if (params.hasOwnProperty('apiKey')) {
-      params.APPID = params.apiKey;
-      delete params.apiKey;
+    // Remove `units` param if it's null (default units).
+    if (params.hasOwnProperty('units') && params.units === null) {
+      delete params.units;
     }
 
     // Merge the constructor given api key with the rest of the params.
-    let queryParams = Object.assign({ APPID: this.apiKey }, params);
+    let queryParams = Object.assign({ appid: this.apiKey }, params);
 
     return queryString.stringify(queryParams);
-  }
-
-  // Convert to OpenWeatherMap API `units` param.
-  convertToUnitsParam(unit) {
-    switch (unit) {
-      case TemperatureUnit.CELCIUS:
-        return 'metric';
-      case TemperatureUnit.KELVIN:
-        return 'imperial';
-    }
   }
 }
