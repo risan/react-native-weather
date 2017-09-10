@@ -22,14 +22,15 @@ const WeatherConditionHero = ({ temperature, temperatureUnit, emoji, name, city,
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 30,
+    paddingTop: 45,
     paddingBottom: 30,
-    backgroundColor: '#FEFDCA'
+    backgroundColor: '#F6416C'
   },
   location: {
     fontSize: 20,
+    color: '#fff',
     textAlign: 'center',
-    marginBottom: 20
+    marginBottom: 10
   },
   detailContainer: {
     flexDirection: 'row',
@@ -45,10 +46,12 @@ const styles = StyleSheet.create({
     flex: 1
   },
   temperature: {
-    fontSize: 40
+    fontSize: 40,
+    color: '#fff'
   },
   conditionName: {
-    fontSize: 18
+    fontSize: 18,
+    color: '#fff'
   }
 });
 
