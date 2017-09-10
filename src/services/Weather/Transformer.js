@@ -1,5 +1,6 @@
 import WeatherConditionText from './WeatherConditionText';
 import WeatherConditionEmoji from './WeatherConditionEmoji';
+import TemperatureUnit from '../../utils/TemperatureUnit';
 
 export default class Transformer {
   static transform(data, { city, countryCode }) {
@@ -23,10 +24,11 @@ export default class Transformer {
         condition: {
           id: data.weather[0].id,
           name: WeatherConditionText.getForCode(data.weather[0].id),
-          emoji: WeatherConditionEmoji.getForCode(data.weather[0].id),
+          emoji: WeatherConditionEmoji.getForCode(data.weather[0].id, Transformer.isAtNight(data)),
           group: data.weather[0].main
         },
         temperature: data.main.temp,
+        temperature_unit: TemperatureUnit.CELCIUS,
         temperature_range: {
           min: data.main.temp_min,
           max: data.main.temp_max
@@ -44,5 +46,19 @@ export default class Transformer {
         sunset_at: data.sys.sunset
       }
     };
+  }
+
+  static isAtNight({ timestamp, sys: { sunrise, sunset } }) {
+    if (timestamp < sunrise && timestamp < sunset) {
+      return true;
+    }
+
+    if (timestamp >= sunrise && timestamp < sunset) {
+      return false;
+    }
+
+    if (timestamp > sunrise && timestamp >= sunset) {
+      return true;
+    }
   }
 }

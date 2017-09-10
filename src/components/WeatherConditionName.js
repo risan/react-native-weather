@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text } from 'react-native';
 
-const Location = ({ name, style = {} }) => {
+const WeatherConditionName = ({ name, style = {} }) => {
   return <Text style={style}>{name}</Text>;
 }
 
-export default Location;
+export default WeatherConditionName;

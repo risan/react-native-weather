@@ -10,11 +10,11 @@ export default class CurrentWeatherContainer extends Component {
     super(props);
 
     this.state = {
+      city: 'Stockholm',
       temperature: 0,
-      unit: TemperatureUnit.CELCIUS,
-      weatherCondition: null,
-      city: 'Jakarta',
-      lastUpdatedAt: null
+      temperatureUnit: TemperatureUnit.CELCIUS,
+      emoji: null,
+      conditionName: null
     };
 
     this.weather = new Weather({ apiKey: env.OPEN_WEATHER_API_KEY });
@@ -31,14 +31,13 @@ export default class CurrentWeatherContainer extends Component {
         unit: this.state.unit
       });
 
-      //console.log(data);
+      console.log(data);
 
       this.setState(previousState => {
         return {
           temperature: data.weather.temperature,
-          weatherCondition: data.weather.condition.name,
-          city: data.location.city,
-          lastUpdatedAt: moment.unix(data.timestamp).fromNow()
+          emoji: data.weather.condition.emoji,
+          conditionName: data.weather.condition.name
         };
       });
     } catch (error) {
@@ -50,10 +49,10 @@ export default class CurrentWeatherContainer extends Component {
     return (
       <CurrentWeather
         temperature={this.state.temperature}
-        weatherCondition={this.state.weatherCondition}
-        unit={this.state.unit}
+        temperatureUnit={this.state.temperatureUnit}
+        emoji={this.state.emoji}
+        name={this.state.conditionName}
         city={this.state.city}
-        lastUpdatedAt={this.state.lastUpdatedAt}
       />
     );
   }

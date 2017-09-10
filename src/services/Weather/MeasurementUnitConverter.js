@@ -7,14 +7,15 @@ export default class MeasurementUnitConverter {
         return data;
       case TemperatureUnit.FAHRENHEIT:
       case TemperatureUnit.KELVIN:
-        return MeasurementUnitConverter.convertCelciusProperties(data, unit);
+        return MeasurementUnitConverter.convertTemperatureProperties(data, unit);
     }
   }
 
-  static convertCelciusProperties(data, unit) {
+  static convertTemperatureProperties(data, unit) {
     ({ weather } = data);
 
     let replacements = {
+      temperature_unit: unit,
       temperature: MeasurementUnitConverter.convertCelcius(weather.temperature),
       temperature_range: {
         min: MeasurementUnitConverter.convertCelcius(weather.temperature_range.min),
