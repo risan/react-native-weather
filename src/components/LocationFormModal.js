@@ -1,5 +1,6 @@
 import React from 'react';
-import { Button, Keyboard, KeyboardAvoidingView, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import Button from './Button';
 
 const LocationFormModal = ({ visibility = false, onPressCancel }) => {
   return (
@@ -8,13 +9,8 @@ const LocationFormModal = ({ visibility = false, onPressCancel }) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.contentContainer}>
             <TextInput style={styles.textInput} placeholder="Enter City..." />
-            <TouchableOpacity onPress={onPressCancel}>
-              <View style={styles.button}><Text style={styles.buttonText}>Save</Text></View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={onPressCancel}>
-              <View style={[styles.button, { backgroundColor: '#F6416C' }]}><Text style={[styles.buttonText, { color: '#fff' }]}>Cancel</Text></View>
-            </TouchableOpacity>
+            <Button type="warning" title="Save" onPress={onPressCancel} />
+            <Button type="danger" title="Cancel" onPress={onPressCancel} />
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -22,17 +18,7 @@ const LocationFormModal = ({ visibility = false, onPressCancel }) => {
   );
 }
 
-const styles = {
-  button: {
-    padding: 12,
-    backgroundColor: '#FFDE7D',
-    borderRadius: 5,
-    marginBottom: 10
-  },
-  buttonText: {
-    fontSize: 18,
-    textAlign: 'center'
-  },
+const styles = StyleSheet.create({
   container: {
     flex: 1
   },
@@ -49,6 +35,6 @@ const styles = {
     borderRadius: 5,
     backgroundColor: '#fff'
   }
-};
+});
 
 export default LocationFormModal;
