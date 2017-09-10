@@ -1,8 +1,12 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
 
-const Location = ({ name, style = {} }) => {
-  return <Text style={style}>{name}</Text>;
+const Location = ({ name, onPress, style = {} }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Text style={style}>{name}</Text>
+    </TouchableOpacity>
+  );
 }
 
 export default Location;

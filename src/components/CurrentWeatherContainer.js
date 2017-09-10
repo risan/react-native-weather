@@ -14,7 +14,8 @@ export default class CurrentWeatherContainer extends Component {
       temperature: 0,
       temperatureUnit: TemperatureUnit.CELCIUS,
       emoji: null,
-      conditionName: null
+      conditionName: null,
+      locationFormModalVisibility: true
     };
 
     this.weather = new Weather({ apiKey: env.OPEN_WEATHER_API_KEY });
@@ -45,6 +46,14 @@ export default class CurrentWeatherContainer extends Component {
     }
   }
 
+  handlePressLocation() {
+    this.setState({ locationFormModalVisibility: true });
+  }
+
+  handlePressLocationFormModalCancel() {
+    this.setState({ locationFormModalVisibility: false });
+  }
+
   render() {
     return (
       <CurrentWeather
@@ -53,6 +62,9 @@ export default class CurrentWeatherContainer extends Component {
         emoji={this.state.emoji}
         name={this.state.conditionName}
         city={this.state.city}
+        locationFormModalVisibility={this.state.locationFormModalVisibility}
+        onPressLocation={() => this.handlePressLocation()}
+        onPressLocationFormModalCancel={() => this.handlePressLocationFormModalCancel()}
       />
     );
   }
