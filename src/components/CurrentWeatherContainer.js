@@ -23,8 +23,12 @@ export default class CurrentWeatherContainer extends Component {
   }
 
   async componentDidMount() {
-    await this.fetchPreviouslyStoredData();
-    this.fetchData();
+    try {
+      await this.fetchPreviouslyStoredData();
+      this.fetchData();
+    } catch (error) {
+      Alert.alert(error.message);
+    }
   }
 
   async fetchPreviouslyStoredData() {
@@ -37,7 +41,6 @@ export default class CurrentWeatherContainer extends Component {
   }
 
   async fetchData({ city = this.state.city, unit = this.state.unit, updateState = true } = {}) {
-    console.log(city);
     try {
       let data = await this.weather.getCurrent({ city, unit });
 
