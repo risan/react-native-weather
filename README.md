@@ -2,6 +2,8 @@
 
 An example of React Native weather application using Open Weather Map API.
 
+![React Native Weather App](https://media.giphy.com/media/3ohhwqLjZg4WYG9vpu/giphy.gif)
+
 ## Requirements
 The following packages are required to run this application example:
 * [Node.js](https://nodejs.org)
