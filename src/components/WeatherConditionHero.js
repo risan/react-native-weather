@@ -8,7 +8,7 @@ import WeatherConditionName from './WeatherConditionName';
 const WeatherConditionHero = ({ temperature, temperatureUnit, emoji, name, city, onPressLocation }) => {
   return (
     <View style={styles.container}>
-      <Location name={city.toUpperCase()} onPress={onPressLocation} style={styles.location} />
+      <Location name={city ? city.toUpperCase() : 'LOCATION'} onPress={onPressLocation} style={styles.location} />
       <View style={styles.detailContainer}>
         <WeatherEmoji emoji={emoji} style={styles.emoji} />
         <View style={styles.temperatureContainer}>

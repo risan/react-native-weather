@@ -3,10 +3,11 @@ import WeatherConditionEmoji from './WeatherConditionEmoji';
 import TemperatureUnit from '../../utils/TemperatureUnit';
 
 export default class Transformer {
-  static transform(data, { city, countryCode }) {
+  static transform(data, { city, countryCode, displayTemperatureUnit = TemperatureUnit.CELCIUS }) {
     return {
       id: data.id,
       timestamp: data.timestamp,
+      display_temperature_unit: displayTemperatureUnit,
       request_params: {
         city: city,
         country_code: countryCode

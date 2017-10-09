@@ -27,7 +27,15 @@ export default class Storage {
     }
   }
 
-  async getCurrent(requestParams = {}, expirationMinutes = this.defaultExpirationMinutes) {
+  async getCurrent() {
+    try {
+      return await this.get(Storage.KEY_CURRENT);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getCurrentWithParams(requestParams = {}, expirationMinutes = this.defaultExpirationMinutes) {
     try {
       return await this.get(Storage.KEY_CURRENT, requestParams, expirationMinutes);
     } catch (error) {
@@ -35,7 +43,7 @@ export default class Storage {
     }
   }
 
-  async get(key, requestParams = {}, expirationMinutes = this.defaultExpirationMinutes) {
+  async get(key, requestParams = null, expirationMinutes = 0) {
     try {
       let data = await this.storage.get(key);
 
@@ -43,11 +51,11 @@ export default class Storage {
         return null;
       }
 
-      if (this.hasDifferentRequestParams(data, requestParams)) {
+      if (requestParams !== null && this.hasDifferentRequestParams(data, requestParams)) {
         return null;
       }
 
-      if (this.isExpired(data, expirationMinutes)) {
+      if (expirationMinutes !== 0 && this.isExpired(data, expirationMinutes)) {
         return null;
       }
 

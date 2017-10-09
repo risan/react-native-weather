@@ -12,9 +12,19 @@ export default class Weather {
     this.storage = new Storage({ storageKey, defaultExpirationMinutes });
   }
 
+  async getPreviouslyStoredCurrent(unit = this.defaultUnit) {
+    try {
+      let data = await this.storage.getCurrent();
+
+      return data !== null ? MeasurementUnitConverter.convert(data, unit) : null;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async getCurrent({ city, countryCode = null, unit = this.defaultUnit, force = false}) {
     try {
-      let data = await this.storage.getCurrent({ city, countryCode });
+      let data = await this.storage.getCurrentWithParams({ city, countryCode });
 
       if (data !== null && ! force) {
         console.log('🌈 FROM STORAGE');
@@ -22,7 +32,7 @@ export default class Weather {
       }
 
       data = await this.client.getCurrent({ city, countryCode });
-      data = Transformer.transform(data, { city, countryCode });
+      data = Transformer.transform(data, { city, countryCode, displayTemperatureUnit: unit });
       await this.storage.setCurrent(data);
 
       console.log('🔥 FROM API');

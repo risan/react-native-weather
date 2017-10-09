@@ -11,22 +11,33 @@ export default class CurrentWeatherContainer extends Component {
     super(props);
 
     this.state = {
-      city: 'Stockholm',
-      temperature: 20,
+      city: null,
+      temperature: 0,
       temperatureUnit: TemperatureUnit.CELCIUS,
       emoji: '⛅️',
-      conditionName: 'few clouds',
+      conditionName: 'loading',
       locationFormModalVisibility: false
     };
 
     this.weather = new Weather({ apiKey: env.OPEN_WEATHER_API_KEY });
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.fetchPreviouslyStoredData();
     this.fetchData();
   }
 
+  async fetchPreviouslyStoredData() {
+    try {
+      let data = await this.weather.getPreviouslyStoredCurrent();
+      data !== null ? this.updateStateWithWeatherData(data) : this.setState({ city: 'Stockholm' });
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async fetchData({ city = this.state.city, unit = this.state.unit, updateState = true } = {}) {
+    console.log(city);
     try {
       let data = await this.weather.getCurrent({ city, unit });
 
@@ -36,18 +47,23 @@ export default class CurrentWeatherContainer extends Component {
         return data;
       }
 
-      this.setState(previousState => {
-        return {
-          city: data.location.city,
-          temperature: data.weather.temperature,
-          temperatureUnit: unit,
-          emoji: data.weather.condition.emoji,
-          conditionName: data.weather.condition.name
-        };
-      });
+      this.setState({ temperatureUnit: unit });
+      this.updateStateWithWeatherData(data);
     } catch (error) {
       throw error;
     }
+  }
+
+  updateStateWithWeatherData(data) {
+    this.setState(previousState => {
+      return {
+        city: data.location.city,
+        temperature: data.weather.temperature,
+        temperatureUnit: data.display_temperature_unit,
+        emoji: data.weather.condition.emoji,
+        conditionName: data.weather.condition.name
+      };
+    });
   }
 
   handlePressLocation() {
@@ -78,7 +94,7 @@ export default class CurrentWeatherContainer extends Component {
         locationFormModalVisibility={this.state.locationFormModalVisibility}
         onPressLocation={() => this.handlePressLocation()}
         onPressLocationFormModalCancel={() => this.handlePressLocationFormModalCancel()}
-        onSubmitEditingLocationFormModal={(city) => this.handleSubmitEditingLocationFromModal(city)}
+        onSubmitEditingLocationFormModal={city => this.handleSubmitEditingLocationFromModal(city)}
       />
     );
   }
