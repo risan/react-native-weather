@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import WeatherConditionHero from './WeatherConditionHero';
 import LocationFormModal from './LocationFormModal';
 
 const CurrentWeather = ({ temperature, temperatureUnit, emoji, name, city, locationFormModalVisibility = false, onPressLocation, onPressLocationFormModalCancel, onSubmitEditingLocationFormModal }) => {
   return (
-    <View>
+    <View style={styles.container}>
       <WeatherConditionHero
         temperature={temperature}
         temperatureUnit={temperatureUnit}
@@ -23,5 +23,11 @@ const CurrentWeather = ({ temperature, temperatureUnit, emoji, name, city, locat
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});
 
 export default CurrentWeather;

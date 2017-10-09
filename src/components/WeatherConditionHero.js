@@ -8,7 +8,6 @@ import WeatherConditionName from './WeatherConditionName';
 const WeatherConditionHero = ({ temperature, temperatureUnit, emoji, name, city, onPressLocation }) => {
   return (
     <View style={styles.container}>
-      <Location name={city ? city.toUpperCase() : 'LOCATION'} onPress={onPressLocation} style={styles.location} />
       <View style={styles.detailContainer}>
         <WeatherEmoji emoji={emoji} style={styles.emoji} />
         <View style={styles.temperatureContainer}>
@@ -16,25 +15,21 @@ const WeatherConditionHero = ({ temperature, temperatureUnit, emoji, name, city,
           <WeatherConditionName name={name} style={styles.conditionName} />
         </View>
       </View>
+      <Location name={city ? city.toUpperCase() : 'LOCATION'} onPress={onPressLocation} style={styles.location} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 45,
-    paddingBottom: 30,
+    flex: 1,
+    justifyContent: 'center',
     backgroundColor: '#F6416C'
-  },
-  location: {
-    fontSize: 20,
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 10
   },
   detailContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 20
   },
   emoji: {
     flex: 1,
@@ -52,6 +47,11 @@ const styles = StyleSheet.create({
   conditionName: {
     fontSize: 18,
     color: '#fff'
+  },
+  location: {
+    fontSize: 26,
+    color: '#fff',
+    textAlign: 'center'
   }
 });
 
